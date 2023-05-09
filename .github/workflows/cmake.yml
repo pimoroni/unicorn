@@ -1,0 +1,75 @@
+name: CMake
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    name: ${{matrix.name}}
+    strategy:
+      matrix:
+        include:
+          - name: Galactic Unicorn
+            src_dir: galactic_unicorn
+          - name: Cosmic Unicorn
+            src_dir: cosmic_unicorn
+
+    runs-on: ubuntu-20.04
+
+    env:
+      PICO_SDK_PATH: $GITHUB_WORKSPACE/pico-sdk
+      PIMORONI_PICO_LIBS: $GITHUB_WORKSPACE/pimoroni-pico
+      RELEASE_FILE: ${{github.event.repository.name}}-${{matrix.src_dir}}-examples-${{github.event.release.tag_name}}
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      with:
+        path: project
+
+    # Checkout the Pimoroni Pico Libraries
+    - name: Checkout Pimoroni Pico Libraries
+      uses: actions/checkout@v3
+      with:
+        repository: pimoroni/pimoroni-pico
+        path: pimoroni-pico
+
+    # Checkout the Pico SDK
+    - name: Checkout Pico SDK
+      uses: actions/checkout@v3
+      with:
+        repository: raspberrypi/pico-sdk
+        path: pico-sdk
+        submodules: true
+
+    # Linux deps
+    - name: Install deps
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt update
+        sudo apt install gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build-${{matrix.src_dir}}
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{runner.workspace}}/build-${{matrix.src_dir}}
+      run: cmake $GITHUB_WORKSPACE/project/examples/c++/${{matrix.src_dir}} -DPIMORONI_PICO_PATH=$GITHUB_WORKSPACE/pimoroni-pico -DPICO_SDK_PATH=$GITHUB_WORKSPACE/pico-sdk
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/build-${{matrix.src_dir}}
+      shell: bash
+      run: |
+        cmake --build . --config Release
+        mkdir dist
+        cp *.uf2 dist/
+
+    - name: Store .uf2 files as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{env.RELEASE_FILE}}
+        path: ${{runner.workspace}}/build-${{matrix.src_dir}}/dist
