@@ -62,15 +62,9 @@ jobs:
           - name: Cosmic Unicorn
             shortname: cosmic_unicorn
             board: PIMORONI_COSMIC_UNICORN
-            # 0x10000000 + (2*1024*1024) - (848*1024)
-            dir2uf2_fs_start: 269664256
-            dir2uf2_fs_size: 868352
           - name: Galactic Unicorn
             shortname: galactic_unicorn
             board: PIMORONI_GALACTIC_UNICORN
-            # 0x10000000 + (2*1024*1024) - (848*1024)
-            dir2uf2_fs_start: 269664256
-            dir2uf2_fs_size: 868352
 
     env:
       RELEASE_FILE: pimoroni-${{matrix.shortname}}-${{github.event.release.tag_name || github.sha}}-micropython.uf2
@@ -108,13 +102,6 @@ jobs:
         submodules: true
         path: pimoroni-pico
 
-    # Check out dir2u2f
-    - uses: actions/checkout@v3
-      with:
-        repository: gadgetoid/dir2uf2
-        ref: v0.0.1
-        path: dir2uf2
-
      # HACK: Patch startup overclock into Pico SDK
     - name: "HACK: Startup Overclock Patch"
       shell: bash
@@ -145,7 +132,7 @@ jobs:
 
     - name: Rename .uf2 for artifact
       shell: bash
-      working-directory: micropython/ports/rp2/build
+      working-directory: micropython/ports/rp2/build-${{matrix.shortname}}
       run: |
         cp firmware.uf2 ${{env.RELEASE_FILE}}
 
@@ -153,7 +140,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{env.RELEASE_FILE}}
-        path: micropython/ports/rp2/build/${{env.RELEASE_FILE}}
+        path: micropython/ports/rp2/build-${{matrix.shortname}}/${{env.RELEASE_FILE}}
 
     - name: Upload .uf2
       if: github.event_name == 'release'
@@ -161,7 +148,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       with:
-        asset_path: micropython/ports/rp2/build/${{env.RELEASE_FILE}}
+        asset_path: micropython/ports/rp2/build-${{matrix.shortname}}/${{env.RELEASE_FILE}}
         upload_url: ${{github.event.release.upload_url}}
         asset_name: ${{env.RELEASE_FILE}}
         asset_content_type: application/octet-stream
