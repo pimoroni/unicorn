@@ -22,7 +22,7 @@ jobs:
     env:
       PICO_SDK_PATH: $GITHUB_WORKSPACE/pico-sdk
       PIMORONI_PICO_LIBS: $GITHUB_WORKSPACE/pimoroni-pico
-      RELEASE_FILE: ${{github.event.repository.name}}-${{matrix.src_dir}}-examples-${{github.event.release.tag_name}}
+      RELEASE_FILE: ${{github.event.repository.name}}-${{matrix.src_dir}}-examples-${{github.event.release.tag_name || github.sha}}
 
     steps:
     - name: Checkout Code

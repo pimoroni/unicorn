@@ -1,4 +1,4 @@
-name: MicroPython Firmware
+name: MicroPython
 
 on:
   push:
@@ -54,7 +54,7 @@ jobs:
 
   build:
     needs: deps
-    name: Build ${{matrix.name}}
+    name: ${{matrix.name}}
     runs-on: ubuntu-20.04
     strategy:
       matrix:
