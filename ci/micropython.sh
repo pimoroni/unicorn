@@ -70,7 +70,7 @@ function ci_micropython_build_mpy_cross {
 }
 
 function ci_apt_install_build_deps {
-    sudo apt update && sudo apt install ccache python3-virtualenvwrapper virtualenvwrapper
+    sudo apt update && sudo apt install ccache
 }
 
 function ci_prepare_all {
