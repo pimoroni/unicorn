@@ -1,4 +1,4 @@
-name: MicroPython Firmware
+name: MicroPython
 
 on:
   push:
@@ -6,149 +6,93 @@ on:
   release:
     types: [created]
 
-env:
-  MICROPYTHON_VERSION: v1.20.0
-  PIMORONI_PICO_VERSION: 302d6ae0ebccbec8b676a5eb5e1ec9b273f4eecd
-
 jobs:
-  deps:
-    runs-on: ubuntu-20.04
-    name: Dependencies
-    steps:
-    - name: Workspace Cache
-      id: cache
-      uses: actions/cache@v3
-      with:
-        path: ${{runner.workspace}}
-        key: workspace-micropython-${{env.MICROPYTHON_VERSION}}
-        restore-keys: |
-          workspace-micropython-${{env.MICROPYTHON_VERSION}}
-
-    # Check out MicroPython
-    - name: Checkout MicroPython
-      if: steps.cache.outputs.cache-hit != 'true'
-      uses: actions/checkout@v3
-      with:
-        repository: micropython/micropython
-        ref: ${{env.MICROPYTHON_VERSION}}
-        submodules: false  # MicroPython submodules are hideously broken
-        path: micropython
-
-    - name: Fetch base MicroPython submodules
-      if: steps.cache.outputs.cache-hit != 'true'
-      shell: bash
-      working-directory: micropython
-      run: git submodule update --init
-
-    - name: Fetch Pico SDK submodules
-      if: steps.cache.outputs.cache-hit != 'true'
-      shell: bash
-      working-directory: micropython/lib/pico-sdk
-      run: git submodule update --init
-
-    - name: Build mpy-cross
-      if: steps.cache.outputs.cache-hit != 'true'
-      shell: bash
-      working-directory: micropython/mpy-cross
-      run: make
-
   build:
-    needs: deps
-    name: Build ${{matrix.name}}
-    runs-on: ubuntu-20.04
+    name: MicroPython ${{ matrix.name }}
+    runs-on: ubuntu-24.04
+    continue-on-error: true
     strategy:
       matrix:
         include:
-          - name: Cosmic Unicorn
-            shortname: cosmic_unicorn
-            board: PIMORONI_COSMIC_UNICORN
-          - name: Galactic Unicorn
-            shortname: galactic_unicorn
-            board: PIMORONI_GALACTIC_UNICORN
+        - name: pico_w_unicorn
+        - name: pico2_w_unicorn
 
     env:
-      RELEASE_FILE: pimoroni-${{matrix.shortname}}-${{github.event.release.tag_name || github.sha}}-micropython.uf2
-      FIRMWARE_DIR: "$GITHUB_WORKSPACE/unicorn/firmware"
-      BOARD_DIR: "$GITHUB_WORKSPACE/unicorn/firmware/${{matrix.board}}"
+      # MicroPython version will be contained in github.event.release.tag_name for releases
+      RELEASE_FILE: ${{ matrix.name }}-${{ github.event.release.tag_name || github.sha }}-micropython
+      CI_PROJECT_ROOT: ${{ github.workspace }}/src-${{ github.sha }}
+      CI_BUILD_ROOT: ${{ github.workspace }}
 
     steps:
-    - name: Compiler Cache
-      uses: actions/cache@v3
+    - name: Compiler Cache Fixup
+      run: |
+        mkdir -p /home/runner/.ccache
+  
+    - name: "CCache: Restore saved cache"
+      uses: actions/cache@v4
       with:
         path: /home/runner/.ccache
-        key: ccache-micropython-${{matrix.shortname}}-${{github.ref}}-${{github.sha}}
+        key: ccache-micropython-${{ matrix.name }}-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
-          ccache-micropython-${{matrix.shortname}}-${{github.ref}}
-          ccache-micropython-${{matrix.shortname}}-
+          ccache-micropython-${{ matrix.name }}-${{ github.ref }}
+          ccache-micropython-${{ matrix.name }}-
 
-    - name: Workspace Cache
-      uses: actions/cache@v3
-      with:
-        path: ${{runner.workspace}}
-        key: workspace-micropython-${{env.MICROPYTHON_VERSION}}
-        restore-keys: |
-          workspace-micropython-${{env.MICROPYTHON_VERSION}}
-
-    - uses: actions/checkout@v3
+    - name: "Checkout Project"
+      uses: actions/checkout@v4
       with:
         submodules: true
-        path: unicorn
+        path: ${{ env.CI_PROJECT_ROOT }}
 
-    # Check out Pimoroni Pico
-    - uses: actions/checkout@v3
+    - name: "Install Arm GNU Toolchain (arm-none-eabi-gcc)"
+      uses: carlosperate/arm-none-eabi-gcc-action@v1
       with:
-        repository: pimoroni/pimoroni-pico
-        ref: ${{env.PIMORONI_PICO_VERSION}}
-        submodules: true
-        path: pimoroni-pico
+        release: '13.3.Rel1'
 
-     # HACK: Patch startup overclock into Pico SDK
-    - name: "HACK: Startup Overclock Patch"
+    - name: "Prepare tools & dependencies"
       shell: bash
-      working-directory: micropython/lib/pico-sdk
       run: |
-        git apply "${{env.FIRMWARE_DIR}}/startup_overclock.patch"
+        source $CI_PROJECT_ROOT/ci/micropython.sh && ci_debug
+        mkdir -p $CI_BUILD_ROOT
+        ci_apt_install_build_deps
+        ci_prepare_all
 
-    # Install apt packages
-    - name: Install CCache & Compiler
+    - name: "MicroPython: Configure"
       shell: bash
-      run:
-        sudo apt update && sudo apt install ccache gcc-arm-none-eabi
-
-    # Build firmware
-    - name: Configure MicroPython
-      shell: bash
-      working-directory: micropython/ports/rp2
       run: |
-        cmake -S . -B build-${{matrix.shortname}} -DPICO_BUILD_DOCS=0 -DUSER_C_MODULES=${{env.BOARD_DIR}}/micropython.cmake -DMICROPY_BOARD_DIR=${{env.BOARD_DIR}} -DMICROPY_BOARD=${{env.BOARD}} -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        source $CI_PROJECT_ROOT/ci/micropython.sh && ci_debug
+        micropython_version
+        ci_cmake_configure ${{ matrix.name }}
 
-    - name: Build MicroPython
+    - name: "MicroPython: Build"
       shell: bash
-      working-directory: micropython/ports/rp2
       run: |
-        ccache --zero-stats || true
-        cmake --build build-${{matrix.shortname}} -j 1
-        ccache --show-stats || true
+        source $CI_PROJECT_ROOT/ci/micropython.sh && ci_debug
+        python3 -m venv "$CI_BUILD_ROOT/.dir2uf2"
+        source "$CI_BUILD_ROOT/.dir2uf2/bin/activate"
+        ci_cmake_build ${{ matrix.name }}
+        mv "$CI_BUILD_ROOT/${{ matrix.name }}.uf2" "$CI_BUILD_ROOT/$RELEASE_FILE.uf2"
+        mv "$CI_BUILD_ROOT/${{ matrix.name }}-with-filesystem.uf2" "$CI_BUILD_ROOT/$RELEASE_FILE-with-filesystem.uf2"
 
-    - name: Rename .uf2 for artifact
-      shell: bash
-      working-directory: micropython/ports/rp2/build-${{matrix.shortname}}
-      run: |
-        cp firmware.uf2 ${{env.RELEASE_FILE}}
-
-    - name: Store .uf2 as artifact
-      uses: actions/upload-artifact@v3
+    - name: "Artifacts: Upload .uf2"
+      uses: actions/upload-artifact@v4
       with:
-        name: ${{env.RELEASE_FILE}}
-        path: micropython/ports/rp2/build-${{matrix.shortname}}/${{env.RELEASE_FILE}}
+        name: ${{ env.RELEASE_FILE }}.uf2
+        path: ${{ env.CI_BUILD_ROOT }}/${{ env.RELEASE_FILE }}.uf2
+        
+    - name: "Artifacts: Upload .uf2 (With Filesystem)"
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.RELEASE_FILE }}-with-filesystem.uf2
+        path: ${{ env.CI_BUILD_ROOT }}/${{ env.RELEASE_FILE }}-with-filesystem.uf2
 
-    - name: Upload .uf2
+    - name: "Release: Upload .uf2"
       if: github.event_name == 'release'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      uses: softprops/action-gh-release@v1
       with:
-        asset_path: micropython/ports/rp2/build-${{matrix.shortname}}/${{env.RELEASE_FILE}}
-        upload_url: ${{github.event.release.upload_url}}
-        asset_name: ${{env.RELEASE_FILE}}
-        asset_content_type: application/octet-stream
+        files: ${{ env.CI_BUILD_ROOT }}/${{ env.RELEASE_FILE }}.uf2
+
+    - name: "Release: Upload .uf2 (With Filesystem)"
+      if: github.event_name == 'release'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ env.CI_BUILD_ROOT }}/${{ env.RELEASE_FILE }}-with-filesystem.uf2
