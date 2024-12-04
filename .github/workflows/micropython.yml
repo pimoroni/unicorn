@@ -14,8 +14,10 @@ jobs:
     strategy:
       matrix:
         include:
-        - name: pico_w_unicorn
-        - name: pico2_w_unicorn
+        - name: pico_w_galactic
+        - name: pico_w_cosmic
+        - name: pico_w_stellar
+        - name: pico2_w_galactic
 
     env:
       # MicroPython version will be contained in github.event.release.tag_name for releases

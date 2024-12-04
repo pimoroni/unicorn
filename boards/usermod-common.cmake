@@ -38,9 +38,7 @@ include(adcfft/micropython)
 
 # LEDs & Matrices
 include(plasma/micropython)
-include(galactic_unicorn/micropython)
-include(cosmic_unicorn/micropython)
-include(stellar_unicorn/micropython)
+include(${UNICORN}_unicorn/micropython)
 
 # Servos & Motors
 include(pwm/micropython)
