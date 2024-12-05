@@ -16,6 +16,8 @@ flashing "-with-examples" - *your files will be erased!*
 
 You can find the latest release at [https://github.com/pimoroni/unicorn/releases/latest](https://github.com/pimoroni/unicorn/releases/latest).
 
-## Guides & Documentation
-
 ## Get Unicorn
+
+* [Stellar 16x16 (Pico W)](https://shop.pimoroni.com/products/space-unicorns?variant=40842632953939)
+* [Galactic 53x11 (Pico W)](https://shop.pimoroni.com/products/space-unicorns?variant=40842033561683)
+* [Cosmic 32x32 (Pico W)](https://shop.pimoroni.com/products/space-unicorns?variant=40842626596947)
