@@ -44,8 +44,8 @@ Stellar Unicorn ships with MicroPython firmware pre-loaded, but you can download
 
 The easiest way to start displaying cool stuff on Stellar Unicorn is using our Stellar Unicorn module (which contains a bunch of helpful functions for interacting with the buttons, adjusting brightness and suchlike) and our PicoGraphics library, which is chock full of useful functions for drawing on the LED matrix.
 
-- [Stellar Unicorn function reference](../../modules/stellar_unicorn/README.md)
-- [PicoGraphics function reference](../../modules/picographics/README.md)
+- [Stellar Unicorn function reference](https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/modules/stellar_unicorn/README.md)
+- [PicoGraphics function reference](https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/modules/picographics)
 
 ## Examples
 
@@ -55,7 +55,7 @@ The easiest way to start displaying cool stuff on Stellar Unicorn is using our S
 
 Clock example with (optional) NTP synchronization. You can adjust the brightness with LUX + and -, and resync the time by pressing A.
 
-This example uses a custom tiny bitmap font, find 3x5.bitmapfont in [fonts](../../common/fonts) and copy it to your Pico W.
+This example uses a custom tiny bitmap font, find 3x5.bitmapfont in [fonts](https://github.com/pimoroni/pimoroni-pico/tree/main/common/fonts) and copy it to your Pico W.
 
 ### Eighties Super Computer
 
