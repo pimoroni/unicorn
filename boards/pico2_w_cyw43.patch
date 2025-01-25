@@ -1,0 +1,57 @@
+From 2a810a926722b163ea3f7b183053964a2dc57e76 Mon Sep 17 00:00:00 2001
+From: Peter Harper <peter.harper@raspberrypi.com>
+Date: Fri, 24 Jan 2025 18:47:52 +0000
+Subject: [PATCH] Fix unreliable writes to cyw43.
+
+We use a pio and dma to write to the cyw43 chip using spi. Normally you
+write an address and then read the data from that address, so the pio
+program does does a write then read.
+
+If you just want to write data in the case of uploading firmware we
+use the fdebug_tx_stall flag to work out if the pio has stalled waiting
+to read data which will never arrive.
+
+The theory is that this flag will also get set if the bus is busy. So
+we mistakenly think a write to cyw43 has completed.
+
+Add a check for the dma irq as well.
+
+Fixes #2206
+---
+ src/rp2_common/pico_cyw43_driver/cyw43_bus_pio_spi.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/rp2_common/pico_cyw43_driver/cyw43_bus_pio_spi.c b/src/rp2_common/pico_cyw43_driver/cyw43_bus_pio_spi.c
+index bcc7284f1..302155ca2 100644
+--- a/src/rp2_common/pico_cyw43_driver/cyw43_bus_pio_spi.c
++++ b/src/rp2_common/pico_cyw43_driver/cyw43_bus_pio_spi.c
+@@ -231,7 +231,7 @@ int cyw43_spi_transfer(cyw43_int_t *self, const uint8_t *tx, size_t tx_length, u
+         return CYW43_FAIL_FAST_CHECK(-CYW43_EINVAL);
+     }
+ 
+-    bus_data_t *bus_data = (bus_data_t *)self->bus_data;
++    volatile bus_data_t *bus_data = (bus_data_t *)self->bus_data;
+     start_spi_comms(self);
+     if (rx != NULL) {
+         if (tx == NULL) {
+@@ -306,6 +306,7 @@ int cyw43_spi_transfer(cyw43_int_t *self, const uint8_t *tx, size_t tx_length, u
+         channel_config_set_bswap(&out_config, true);
+         channel_config_set_dreq(&out_config, pio_get_dreq(bus_data->pio, bus_data->pio_sm, true));
+ 
++        dma_hw->ints0 = 1u << bus_data->dma_out;
+         dma_channel_configure(bus_data->dma_out, &out_config, &bus_data->pio->txf[bus_data->pio_sm], tx, tx_length / 4, true);
+ 
+         uint32_t fdebug_tx_stall = 1u << (PIO_FDEBUG_TXSTALL_LSB + bus_data->pio_sm);
+@@ -315,6 +316,12 @@ int cyw43_spi_transfer(cyw43_int_t *self, const uint8_t *tx, size_t tx_length, u
+             tight_loop_contents(); // todo timeout
+         }
+         __compiler_memory_barrier();
++
++        while (!(dma_hw->intr & 1u << bus_data->dma_out)) {
++            tight_loop_contents();
++        }
++        dma_hw->ints0 = 1u << bus_data->dma_out;
++
+         pio_sm_set_enabled(bus_data->pio, bus_data->pio_sm, false);
+         pio_sm_set_consecutive_pindirs(bus_data->pio, bus_data->pio_sm, CYW43_PIN_WL_DATA_IN, 1, false);
+     } else if (rx != NULL) { /* currently do one at a time */
