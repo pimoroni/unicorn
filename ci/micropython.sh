@@ -52,7 +52,8 @@ function ci_micropython_clone {
     git submodule update --init lib/micropython-lib
     git submodule update --init lib/tinyusb
     git submodule update --init lib/btstack
-    log_inform "HACK: Patching dma aborts for Pico2 W."
+    cd "$CI_BUILD_ROOT"
+    log_inform "HACK: cyw43 stability backport for Pico2 W. See: https://github.com/raspberrypi/pico-sdk/pull/2209"
     cd "$CI_BUILD_ROOT/micropython/lib/pico-sdk"
     git apply "$CI_PROJECT_ROOT/boards/pico2_w_cyw43.patch"
     cd "$CI_BUILD_ROOT"
@@ -62,6 +63,7 @@ function ci_tools_clone {
     mkdir -p "$CI_BUILD_ROOT/tools"
     git clone https://github.com/gadgetoid/py_decl -b "$PY_DECL_VERSION" "$CI_BUILD_ROOT/tools/py_decl"
     git clone https://github.com/gadgetoid/dir2uf2 -b "$DIR2UF2_VERSION" "$CI_BUILD_ROOT/tools/dir2uf2"
+    python3 -m pip install littlefs-python==0.12.0
 }
 
 function ci_micropython_build_mpy_cross {
@@ -96,18 +98,21 @@ function micropython_version {
 
 function ci_cmake_configure {
     BOARD=$1
+    TOOLS_DIR="$CI_BUILD_ROOT/tools"
     MICROPY_BOARD_DIR=$CI_PROJECT_ROOT/boards/$BOARD
-    if [ ! -f "$MICROPY_BOARD_DIR/usermodules.cmake" ]; then
+    if [ ! -f "$MICROPY_BOARD_DIR/mpconfigboard.cmake" ]; then
         log_warning "Invalid board: $MICROPY_BOARD_DIR"
         return 1
     fi
+    USER_C_MODULES_FILE="$CI_PROJECT_ROOT/boards/usermod-common.cmake"
     BUILD_DIR="$CI_BUILD_ROOT/build-$BOARD"
     cmake -S $CI_BUILD_ROOT/micropython/ports/rp2 -B "$BUILD_DIR" \
     -DPICOTOOL_FORCE_FETCH_FROM_GIT=1 \
     -DPICO_BUILD_DOCS=0 \
     -DPICO_NO_COPRO_DIS=1 \
     -DPIMORONI_PICO_PATH="$CI_BUILD_ROOT/pimoroni-pico" \
-    -DUSER_C_MODULES="$MICROPY_BOARD_DIR/usermodules.cmake" \
+    -DPIMORONI_TOOLS_DIR="$TOOLS_DIR" \
+    -DUSER_C_MODULES="$USER_C_MODULES_FILE" \
     -DMICROPY_BOARD_DIR="$MICROPY_BOARD_DIR" \
     -DMICROPY_BOARD="$BOARD" \
     -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -117,27 +122,16 @@ function ci_cmake_configure {
 function ci_cmake_build {
     BOARD=$1
     MICROPY_BOARD_DIR=$CI_PROJECT_ROOT/boards/$BOARD
-    # Hack to deal with each board needing its own baked directory
-    # TODO: We should probably define some means to configure this
-    # Like using CMake to invoke dir2uf2
-    EXAMPLES_DIR="$(printf $BOARD | cut -d_ -f3)_unicorn/launch"
-    EXAMPLES_ROOT="$CI_PROJECT_ROOT/examples"
-    TOOLS_DIR=$CI_BUILD_ROOT/tools
     BUILD_DIR="$CI_BUILD_ROOT/build-$BOARD"
     ccache --zero-stats || true
     cmake --build $BUILD_DIR -j 2
     ccache --show-stats || true
-    if [ -d "$TOOLS_DIR/py_decl" ]; then
-        log_inform "Tools found, verifying .uf2 with py_decl..."
-        python3 "$TOOLS_DIR/py_decl/py_decl.py" --to-json --verify "$BUILD_DIR/firmware.uf2"
-    fi
+
     log_inform "Copying .uf2 to $(pwd)/$BOARD.uf2"
     cp "$BUILD_DIR/firmware.uf2" $BOARD.uf2
 
-    if [ -f "$MICROPY_BOARD_DIR/manifest.txt" ] && [ -d "$TOOLS_DIR/dir2uf2" ]; then
-        log_inform "Creating $(pwd)/$BOARD-with-filesystem.uf2"
-        log_inform "Using dir: $EXAMPLES_ROOT/$EXAMPLES_DIR"
-        python3 -m pip install littlefs-python==0.12.0
-        $TOOLS_DIR/dir2uf2/dir2uf2 --fs-compact --sparse --append-to "$(pwd)/$BOARD.uf2" --manifest "$MICROPY_BOARD_DIR/manifest.txt" --filename with-filesystem.uf2 "$EXAMPLES_ROOT/$EXAMPLES_DIR"
+    if [ -f "$BUILD_DIR/firmware-with-filesystem.uf2" ]; then
+        log_inform "Copying -with-filesystem .uf2 to $(pwd)/$BOARD-with-filesystem.uf2"
+        cp "$BUILD_DIR/firmware-with-filesystem.uf2" $BOARD-with-filesystem.uf2
     fi
 }
