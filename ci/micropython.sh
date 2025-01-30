@@ -52,6 +52,9 @@ function ci_micropython_clone {
     git submodule update --init lib/micropython-lib
     git submodule update --init lib/tinyusb
     git submodule update --init lib/btstack
+    log_inform "HACK: Patching dma aborts for Pico2 W."
+    cd "$CI_BUILD_ROOT/micropython/lib/pico-sdk"
+    git apply "$CI_PROJECT_ROOT/boards/pico2_w_cyw43.patch"
     cd "$CI_BUILD_ROOT"
 }
 
