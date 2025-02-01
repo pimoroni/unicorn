@@ -21,7 +21,6 @@ include(pimoroni_i2c/micropython)
 include(pimoroni_bus/micropython)
 
 # Pico Graphics Essential
-include(hershey_fonts/micropython)
 include(bitmap_fonts/micropython)
 include(picographics/micropython)
 
@@ -36,15 +35,24 @@ include(micropython-common-breakouts)
 # Utility
 include(adcfft/micropython)
 
+# Unicorn driver. Note: The UNICORN var must be set in mpconfigboard.cmake
+include(${UNICORN}_unicorn/micropython)
+
+# Must call `enable_ulab()` to enable
+include(micropython-common-ulab)
+enable_ulab()
+
+# These do not fit on the 2MB RP2040 Pico W
+if(PICO_PLATFORM EQUAL "rp2350-arm-s")
 # LEDs & Matrices
 include(plasma/micropython)
-include(${UNICORN}_unicorn/micropython)
 
 # Servos & Motors
 include(pwm/micropython)
 include(servo/micropython)
 include(encoder/micropython)
 include(motor/micropython)
+endif()
 
 # Still required for version.py
 include(modules_py/modules_py)
