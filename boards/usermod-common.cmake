@@ -38,7 +38,13 @@ include(adcfft/micropython)
 
 # LEDs & Matrices
 include(plasma/micropython)
+
+# Unicorn driver. Note: The UNICORN var must be set in mpconfigboard.cmake
 include(${UNICORN}_unicorn/micropython)
+
+# Must call `enable_ulab()` to enable
+include(micropython-common-ulab)
+enable_ulab()
 
 # Servos & Motors
 include(pwm/micropython)
