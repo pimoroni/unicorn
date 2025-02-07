@@ -9,15 +9,6 @@ PIMORONI_PICO_VERSION="feature/picovector2-and-layers"
 PY_DECL_VERSION="v0.0.3"
 DIR2UF2_VERSION="v0.0.9"
 
-if [ -z ${CI_PROJECT_ROOT+x} ]; then
-    SCRIPT_PATH="$(dirname $0)"
-    CI_PROJECT_ROOT=$(realpath "$SCRIPT_PATH/..")
-fi
-
-if [ -z ${CI_BUILD_ROOT+x} ]; then
-    CI_BUILD_ROOT=$(pwd)
-fi
-
 
 function log_success {
 	echo -e "$(tput setaf 2)$1$(tput sgr0)"
@@ -102,8 +93,8 @@ function ci_cmake_configure {
     BOARD=$1
     TOOLS_DIR="$CI_BUILD_ROOT/tools"
     MICROPY_BOARD_DIR=$CI_PROJECT_ROOT/boards/$BOARD
-    if [ ! -f "$MICROPY_BOARD_DIR/mpconfigboard.cmake" ]; then
-        log_warning "Invalid board: $MICROPY_BOARD_DIR"
+    if [ ! -f "$MICROPY_BOARD_DIR/mpconfigboard.h" ]; then
+        log_warning "Invalid board: \"$BOARD\". Run with ci_cmake_configure <board_name>."
         return 1
     fi
     USER_C_MODULES_FILE="$CI_PROJECT_ROOT/boards/usermod-common.cmake"
@@ -112,6 +103,7 @@ function ci_cmake_configure {
     -DPICOTOOL_FORCE_FETCH_FROM_GIT=1 \
     -DPICO_BUILD_DOCS=0 \
     -DPICO_NO_COPRO_DIS=1 \
+    -DPICOTOOL_FETCH_FROM_GIT_PATH="$TOOLS_DIR/picotool" \
     -DPIMORONI_PICO_PATH="$CI_BUILD_ROOT/pimoroni-pico" \
     -DPIMORONI_TOOLS_DIR="$TOOLS_DIR" \
     -DUSER_C_MODULES="$USER_C_MODULES_FILE" \
@@ -124,6 +116,10 @@ function ci_cmake_configure {
 function ci_cmake_build {
     BOARD=$1
     MICROPY_BOARD_DIR=$CI_PROJECT_ROOT/boards/$BOARD
+    if [ ! -f "$MICROPY_BOARD_DIR/mpconfigboard.h" ]; then
+        log_warning "Invalid board: \"$BOARD\". Run with ci_cmake_build <board_name>."
+        return 1
+    fi
     BUILD_DIR="$CI_BUILD_ROOT/build-$BOARD"
     ccache --zero-stats || true
     cmake --build $BUILD_DIR -j 2
@@ -137,3 +133,11 @@ function ci_cmake_build {
         cp "$BUILD_DIR/firmware-with-filesystem.uf2" $BOARD-with-filesystem.uf2
     fi
 }
+
+if [ -z ${CI_USE_ENV+x} ] || [ -z ${CI_PROJECT_ROOT+x} ] || [ -z ${CI_BUILD_ROOT+x} ]; then
+    SCRIPT_PATH="$(dirname $0)"
+    CI_PROJECT_ROOT=$(realpath "$SCRIPT_PATH/..")
+    CI_BUILD_ROOT=$(pwd)
+fi
+
+ci_debug
