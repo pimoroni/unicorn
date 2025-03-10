@@ -122,7 +122,7 @@ Calendar example with (optional) NTP synchronization. You can adjust the brightn
 
 These examples need `WIFI_CONFIG.py` and `network_manager.py` (from the `common` directory) to be saved to your Pico W. Open up `WIFI_CONFIG.py` in Thonny to add your wifi details (and save it when you're done).
 
-- [micropython/examples/common](../../examples/common)
+- [micropython/examples/common](https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/examples/common)
 
 ### Cheerlights History
 
@@ -156,7 +156,7 @@ Display scrolling wisdom, quotes or greetz... from another computer or device!
 
 You can adjust the brightness with LUX + and -.
 
-Requires `logging.mpy` and `tinyweb` from [micropython/examples/common](../../examples/common) - copy these into the `lib` folder on your Pico W. You'll also need `index.html` to be saved alongside `html_text.py`.
+Requires `logging.mpy` and `tinyweb` from [micropython/examples/common](https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/examples/common) - copy these into the `lib` folder on your Pico W. You'll also need `index.html` to be saved alongside `html_text.py`.
 
 ### Weather
 
