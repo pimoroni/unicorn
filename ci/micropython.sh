@@ -44,12 +44,6 @@ function ci_micropython_clone {
     git submodule update --init lib/tinyusb
     git submodule update --init lib/btstack
     cd "$CI_BUILD_ROOT"
-    cd "$CI_BUILD_ROOT/micropython/lib/pico-sdk"
-    log_inform "HACK: cyw43 stability backport for Pico2 W. See: https://github.com/raspberrypi/pico-sdk/pull/2209"
-    git apply "$CI_PROJECT_ROOT/boards/pico2_w_cyw43.patch"
-    log_inform "HACK: backport multicore lockout fix. See: https://github.com/raspberrypi/pico-sdk/pull/2223"
-    git apply "$CI_PROJECT_ROOT/boards/multicore_lockout.patch"
-    cd "$CI_BUILD_ROOT"
 }
 
 function ci_tools_clone {
