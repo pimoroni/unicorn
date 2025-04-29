@@ -72,26 +72,26 @@ def from_hsv(h, s, v):
         return int(p), int(q), int(v)
     if i == 4:
         return int(t), int(p), int(v)
-    if i == 5:
-        return int(v), int(p), int(q)
+    # if i == 5:
+    return int(v), int(p), int(q)
 
 
 # function for drawing a gradient background
 def gradient_background(start_hue, start_sat, start_val, end_hue, end_sat, end_val):
     half_width = width // 2
-    for x in range(0, half_width):
+    for x in range(half_width):
         hue = ((end_hue - start_hue) * (x / half_width)) + start_hue
         sat = ((end_sat - start_sat) * (x / half_width)) + start_sat
         val = ((end_val - start_val) * (x / half_width)) + start_val
         colour = from_hsv(hue, sat, val)
         graphics.set_pen(graphics.create_pen(int(colour[0]), int(colour[1]), int(colour[2])))
-        for y in range(0, height):
+        for y in range(height):
             graphics.pixel(x, y)
             graphics.pixel(width - x - 1, y)
 
     colour = from_hsv(end_hue, end_sat, end_val)
     graphics.set_pen(graphics.create_pen(int(colour[0]), int(colour[1]), int(colour[2])))
-    for y in range(0, height):
+    for y in range(height):
         graphics.pixel(half_width, y)
 
 
@@ -127,7 +127,7 @@ def sync_time():
         if wlan.status() < 0 or wlan.status() >= 3:
             break
         max_wait -= 1
-        print('waiting for connection...')
+        print("waiting for connection...")
         time.sleep(0.2)
 
         redraw_display_if_reqd()

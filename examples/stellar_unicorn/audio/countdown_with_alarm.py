@@ -76,8 +76,7 @@ class Countdown(object):
         self.timer.deinit()
         self.timer_running = False
 
-    def countdown(self, arg):
-
+    def countdown(self, _arg):
         if self.total_seconds == 0:
             audio.play_wav("doorbell.wav", False)
             self.reset()

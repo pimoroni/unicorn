@@ -53,7 +53,7 @@ green = numpy.zeros((height, width))
 blue = numpy.zeros((height, width))
 
 # Reserved for combined channels
-rgb = numpy.zeros((width * height * 4),)
+rgb = numpy.zeros((width * height * 4))
 
 # Stick some gradients in the channels so we have something to look at
 red[::] = numpy.linspace(0, 1, width)
@@ -61,7 +61,7 @@ red[::] = numpy.linspace(0, 1, width)
 # There has to be a better way!?
 for x in range(width):
     green[::, x] = numpy.linspace(0, 1, width)
-    blue[::, x] = numpy.linspace(1, 0, width,)
+    blue[::, x] = numpy.linspace(1, 0, width)
 
 t_count = 0
 t_total = 0

@@ -48,7 +48,7 @@ class EzWiFi:
 
     def on(self, handler_name, handler=None):
         if handler_name not in self._events.keys():
-            raise ValueError(f"Invalid event: \"{handler_name}\"")
+            raise ValueError(f'Invalid event: "{handler_name}"')
 
         def _on(handler):
             self._events[handler_name] = handler
@@ -115,8 +115,8 @@ class EzWiFi:
             if not WIFI_SSID:
                 raise ValueError("secrets.py: WIFI_SSID is empty!")
             return WIFI_SSID, WIFI_PASSWORD
-        except ImportError:
-            raise ImportError("secrets.py: missing or invalid!")
+        except ImportError as err:
+            raise ImportError("secrets.py: missing or invalid!") from err
 
 
 def connect(**kwargs):

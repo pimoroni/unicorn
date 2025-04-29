@@ -28,8 +28,8 @@ def from_hsv(h, s, v):
         return int(p), int(q), int(v)
     if i == 4:
         return int(t), int(p), int(v)
-    if i == 5:
-        return int(v), int(p), int(q)
+    # if i == 5:
+    return int(v), int(p), int(q)
 
 
 phase = 0

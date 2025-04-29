@@ -3,12 +3,12 @@ import random
 from stellar import StellarUnicorn
 from picographics import PicoGraphics, DISPLAY_STELLAR_UNICORN as DISPLAY
 
-'''
+"""
 Random LEDs blink on and off mimicking the look of a movie
 super computer doing its work in the eighties.
 
 You can adjust the brightness with LUX + and -.
-'''
+"""
 
 su = StellarUnicorn()
 graphics = PicoGraphics(DISPLAY)

@@ -3,11 +3,11 @@ import math
 from stellar import StellarUnicorn
 from picographics import PicoGraphics, DISPLAY_STELLAR_UNICORN as DISPLAY
 
-'''
+"""
 Displays some text, gradients and colours and demonstrates button use.
 
 You can adjust the brightness with LUX + and -.
-'''
+"""
 
 su = StellarUnicorn()
 graphics = PicoGraphics(DISPLAY)
@@ -17,15 +17,15 @@ height = StellarUnicorn.HEIGHT
 
 
 def gradient(r, g, b):
-    for y in range(0, height):
-        for x in range(0, width):
+    for y in range(height):
+        for x in range(width):
             graphics.set_pen(graphics.create_pen(int((r * x) / 16), int((g * x) / 16), int((b * x) / 16)))
             graphics.pixel(x, y)
 
 
 def grid(r, g, b):
-    for y in range(0, height):
-        for x in range(0, width):
+    for y in range(height):
+        for x in range(width):
             if (x + y) % 2 == 0:
                 graphics.set_pen(graphics.create_pen(r, g, b))
             else:

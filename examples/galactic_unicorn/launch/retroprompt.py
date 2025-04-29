@@ -87,11 +87,11 @@ def draw():
         for x in range(len(row)):
             pixel = row[x]
             # draw the prompt text
-            if pixel == 'O':
+            if pixel == "O":
                 graphics.set_pen(fg_pen)
 
             # draw the caret blinking
-            elif pixel == 'X' and (time_ms // 300) % 2:
+            elif pixel == "X" and (time_ms // 300) % 2:
                 graphics.set_pen(fg_pen)
 
             else:
