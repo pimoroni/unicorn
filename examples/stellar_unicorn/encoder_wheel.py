@@ -63,8 +63,8 @@ def hsv_to_rgb(h, s, v):
         return p, q, v
     if i == 4:
         return t, p, v
-    if i == 5:
-        return v, p, q
+    # if i == 5:
+    return v, p, q
 
 
 # Simple function to clamp a value between 0.0 and 1.0
@@ -133,7 +133,7 @@ while True:
             wheel.set_rgb(position, 255, 255, 255)
 
         # Set the LEDs below the current position
-        for i in range(0, position):
+        for i in range(position):
             wheel.set_hsv(i, i / NUM_LEDS, saturation, brightness)
 
         # Set the LEDs after the current position

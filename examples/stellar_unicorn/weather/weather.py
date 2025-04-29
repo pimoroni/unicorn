@@ -54,7 +54,7 @@ def get_data():
 
 def calculate_bearing(d):
     # calculates a compass direction from the wind direction in degrees
-    dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+    dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
     ix = round(d / (360. / len(dirs)))
     return dirs[ix % len(dirs)]
 
@@ -62,12 +62,12 @@ def calculate_bearing(d):
 def status_handler(mode, status, ip):
     # reports wifi connection status
     print(mode, status, ip)
-    print('Connecting to wifi...')
+    print("Connecting to wifi...")
     if status is not None:
         if status:
-            print('Wifi connection successful!')
+            print("Wifi connection successful!")
         else:
-            print('Wifi connection failed!')
+            print("Wifi connection failed!")
 
 
 # create objects and picographics surface for drawing
@@ -103,8 +103,8 @@ su.set_brightness(0.8)
 try:
     network_manager = NetworkManager(WIFI_CONFIG.COUNTRY, status_handler=status_handler)
     uasyncio.get_event_loop().run_until_complete(network_manager.client(WIFI_CONFIG.SSID, WIFI_CONFIG.PSK))
-except Exception as e:
-    print(f'Wifi connection failed! {e}')
+except Exception as e:  # noqa: BLE001
+    print(f"Wifi connection failed! {e}")
 
 while True:
     # adjust brightness with LUX + and -

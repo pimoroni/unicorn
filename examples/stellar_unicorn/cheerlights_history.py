@@ -16,7 +16,7 @@ from machine import Timer, Pin
 from stellar import StellarUnicorn
 from picographics import PicoGraphics, DISPLAY_STELLAR_UNICORN as DISPLAY, PEN_P8 as PEN
 
-URL = 'http://api.thingspeak.com/channels/1417/field/1/last.txt'
+URL = "http://api.thingspeak.com/channels/1417/field/1/last.txt"
 
 UPDATE_INTERVAL = 60 * 60 / 16  # refresh interval in secs. Be nice to free APIs!
 # Calculated as 60 minutes * 60 seconds divided by number of pixels per row
@@ -56,23 +56,23 @@ CHEERLIGHTS_COLOR_NAMES = [
 def status_handler(mode, status, ip):
     # reports wifi connection status
     print(mode, status, ip)
-    print('Connecting to wifi...')
+    print("Connecting to wifi...")
     if status is not None:
         if status:
-            print('Wifi connection successful!')
+            print("Wifi connection successful!")
         else:
-            print('Wifi connection failed!')
+            print("Wifi connection failed!")
 
 
-def get_data():
+def get_data(_t=None):
     global index
     # open the json file
     if UPDATE_INTERVAL >= 60:
-        print(f'Requesting URL: {URL}')
+        print(f"Requesting URL: {URL}")
         r = urequests.get(URL)
         name = r.content.decode("utf-8").strip()
         r.close()
-        print('Data obtained!')
+        print("Data obtained!")
 
     else:
         print("Random test colour!")
@@ -91,7 +91,7 @@ def get_data():
 
     colour_array[index] = CHEERLIGHTS_COLOR_NAMES.index(name)
     index += 1
-    print(f'Colour added to array: {name}')
+    print(f"Colour added to array: {name}")
 
     su.update(graphics)
     print("LEDs updated!")
@@ -118,21 +118,21 @@ index = 0
 su.set_brightness(0.5)
 
 # set up the Pico W's onboard LED
-pico_led = Pin('LED', Pin.OUT)
+pico_led = Pin("LED", Pin.OUT)
 
 # set up wifi
 try:
     network_manager = NetworkManager(WIFI_CONFIG.COUNTRY, status_handler=status_handler)
     uasyncio.get_event_loop().run_until_complete(network_manager.client(WIFI_CONFIG.SSID, WIFI_CONFIG.PSK))
-except Exception as e:
-    print(f'Wifi connection failed! {e}')
+except Exception as e:  # noqa: BLE001
+    print(f"Wifi connection failed! {e}")
 
 # get the first lot of data
 get_data()
 
 # start timer (the timer will call the function to update our data every UPDATE_INTERVAL)
 timer = Timer(-1)
-timer.init(period=int(UPDATE_INTERVAL * 1000), mode=Timer.PERIODIC, callback=lambda t: get_data())
+timer.init(period=int(UPDATE_INTERVAL * 1000), mode=Timer.PERIODIC, callback=get_data)
 
 while True:
     # adjust brightness with LUX + and -

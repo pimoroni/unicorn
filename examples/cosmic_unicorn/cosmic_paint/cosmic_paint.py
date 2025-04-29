@@ -22,12 +22,12 @@ server = Microdot()
 
 
 @server.route("/", methods=["GET"])
-def route_index(request):
+def route_index(_request):
     return send_file("cosmic_paint/index.html")
 
 
 @server.route("/static/<path:path>", methods=["GET"])
-def route_static(request, path):
+def route_static(_request, path):
     return send_file(f"cosmic_paint/static/{path}")
 
 
@@ -38,7 +38,7 @@ def get_pixel(x, y):
     return None
 
 
-def flood_fill(x, y, r, g, b):
+def flood_fill(x, y):
     todo = []
 
     def fill(x, y, c):
@@ -73,9 +73,9 @@ def flood_fill(x, y, r, g, b):
         fill(x, y, c)
 
 
-@server.route('/paint')
+@server.route("/paint")
 @websocket.with_websocket
-async def echo(request, ws):
+async def echo(_request, ws):
     while True:
         data = await ws.receive()
         try:
@@ -91,7 +91,7 @@ async def echo(request, ws):
                 data = await ws.receive()
                 x, y, r, g, b = [int(n) for n in data[0:5]]
                 graphics.set_pen(graphics.create_pen(r, g, b))
-                flood_fill(x, y, r, g, b)
+                flood_fill(x, y)
 
             if data == "clear":
                 graphics.set_pen(graphics.create_pen(0, 0, 0))

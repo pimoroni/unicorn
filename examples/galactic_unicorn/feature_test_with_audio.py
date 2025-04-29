@@ -5,7 +5,7 @@ from machine import Timer
 from galactic import GalacticUnicorn, Channel
 from picographics import PicoGraphics, DISPLAY_GALACTIC_UNICORN as DISPLAY
 
-'''
+"""
 Displays some text, gradients and colours and demonstrates button use.
 Also demonstrates some of the audio / synth features.
 
@@ -14,7 +14,7 @@ Also demonstrates some of the audio / synth features.
 - Button C plays a sinewave (it's frequency can be adjusted with VOL + and -)
 - Button D plays a second sinewave (it's frequency can be adjusted with LUX + and -)
 - Sleep button stops the sounds
-'''
+"""
 
 gc.collect()
 
@@ -60,15 +60,15 @@ channels = [gu.synth_channel(i) for i in range(len(notes))]
 
 
 def gradient(r, g, b):
-    for y in range(0, height):
-        for x in range(0, width):
+    for y in range(height):
+        for x in range(width):
             graphics.set_pen(graphics.create_pen(int((r * x) / 52), int((g * x) / 52), int((b * x) / 52)))
             graphics.pixel(x, y)
 
 
 def grid(r, g, b):
-    for y in range(0, height):
-        for x in range(0, width):
+    for y in range(height):
+        for x in range(width):
             if (x + y) % 2 == 0:
                 graphics.set_pen(graphics.create_pen(r, g, b))
             else:
@@ -129,7 +129,7 @@ def next_beat():
     beat = (beat + 1) % SONG_LENGTH
 
 
-def tick(timer):
+def tick(_timer):
     next_beat()
 
 

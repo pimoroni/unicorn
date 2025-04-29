@@ -3,14 +3,14 @@ import math
 from cosmic import CosmicUnicorn
 from picographics import PicoGraphics, DISPLAY_COSMIC_UNICORN as DISPLAY
 
-'''
+"""
 Some good old fashioned rainbows!
 
 You can adjust the cycling speed with A and B,
 stripe width with C and D, hue with VOL + and -,
 and the brightness with LUX + and -.
 The sleep button stops the animation (can be started again with A or B).
-'''
+"""
 
 cu = CosmicUnicorn()
 graphics = PicoGraphics(DISPLAY)
@@ -39,8 +39,8 @@ def from_hsv(h, s, v):
         return int(p), int(q), int(v)
     if i == 4:
         return int(t), int(p), int(v)
-    if i == 5:
-        return int(v), int(p), int(q)
+    # if i == 5:
+    return int(v), int(p), int(q)
 
 
 @micropython.native  # noqa: F821

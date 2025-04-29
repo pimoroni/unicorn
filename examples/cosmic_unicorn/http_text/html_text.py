@@ -7,14 +7,14 @@ import uasyncio as asyncio
 import uasyncio.core
 from tinyweb.server import webserver
 
-'''
+"""
 Display scrolling wisdom, quotes or greetz... from the internetz!
 
 You can adjust the brightness with LUX + and -.
 
 Requires network_manager.py , WIFI_CONFIG.py, logging.mpy and tinyweb from micropython/examples/common
 You'll also need index.html to be saved alongside this file.
-'''
+"""
 
 # Server Settings
 host = "0.0.0.0"
@@ -22,7 +22,7 @@ port = 80
 
 
 def convert_colour(colour_str):
-    colour_str = colour_str.split(',')
+    colour_str = colour_str.split(",")
     print(colour_str)
     return colour_str[0], colour_str[1], colour_str[2]
 
@@ -32,20 +32,19 @@ class text:
     def get(self, data):
         global MESSAGE, MESSAGE_COLOUR, BACKGROUND_COLOUR
         print(data)
-        if 'text' in data.keys():
-            MESSAGE = data['text']
-        if 'colourfg' in data.keys():
-            MESSAGE_COLOUR = convert_colour(data['colourfg'])
-        if 'colourbg' in data.keys():
-            BACKGROUND_COLOUR = convert_colour(data['colourbg'])
-        return {'message': 'text updated'}, 201
+        if "text" in data.keys():
+            MESSAGE = data["text"]
+        if "colourfg" in data.keys():
+            MESSAGE_COLOUR = convert_colour(data["colourfg"])
+        if "colourbg" in data.keys():
+            BACKGROUND_COLOUR = convert_colour(data["colourbg"])
+        return {"message": "text updated"}, 201
 
-    def post(self, data):
+    def post(self, _data):
+        return {"message": "text updated"}, 201
 
-        return {'message': 'text updated'}, 201
 
-
-def status_handler(mode, status, ip):
+def status_handler(_mode, status, ip):
     global MESSAGE
     print("Network: {}".format(WIFI_CONFIG.SSID))
     status_text = "Connecting..."
@@ -65,17 +64,17 @@ app = webserver()
 
 
 # Index page
-@app.route('/')
-async def index(request, response):
+@app.route("/")
+async def index(_request, response):
     # Send actual HTML page
-    await response.send_file('index.html', content_type='text/html')
+    await response.send_file("index.html", content_type="text/html")
 
 
 # HTTP redirection
-@app.route('/redirect')
-async def redirect(request, response):
+@app.route("/redirect")
+async def redirect(_request, response):
     # Start HTTP response with content-type text/html
-    await response.redirect('/')
+    await response.redirect("/")
 
 # constants for controlling scrolling text
 PADDING = 5
@@ -114,7 +113,7 @@ def run():
     # Setup wifi
     network_manager = NetworkManager(WIFI_CONFIG.COUNTRY, status_handler=status_handler)
 
-    app.add_resource(text, '/update')
+    app.add_resource(text, "/update")
 
     # Connect to Wifi network
     asyncio.get_event_loop().run_until_complete(network_manager.client(WIFI_CONFIG.SSID, WIFI_CONFIG.PSK))
@@ -183,8 +182,8 @@ async def message_update():
 
 
 # The following is required to run both the web server and the scrolling text coherently
-app._server_coro = app._tcp_server(host, port, app.backlog)
+app._server_coro = app._tcp_server(host, port, app.backlog)  # noqa: SLF001
 loop = asyncio.get_event_loop()
 t1 = loop.create_task(message_update())
-t2 = loop.create_task(app._server_coro)
+t2 = loop.create_task(app._server_coro)  # noqa: SLF001
 loop.run_forever()

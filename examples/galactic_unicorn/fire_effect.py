@@ -3,12 +3,12 @@ import random
 from galactic import GalacticUnicorn
 from picographics import PicoGraphics, DISPLAY_GALACTIC_UNICORN as DISPLAY
 
-'''
+"""
 A pretty, procedural fire effect.
 
 Switch between landscape fire and vertical fire using the A and B buttons!
 You can adjust the brightness with LUX + and -.
-'''
+"""
 
 gu = GalacticUnicorn()
 graphics = PicoGraphics(DISPLAY)
@@ -47,7 +47,7 @@ def update():
         heat[x][height - 1] = 0.0
         heat[x][height - 2] = 0.0
 
-    for c in range(fire_spawns):
+    for _ in range(fire_spawns):
         x = random.randint(0, width - 4) + 2
         heat[x + 0][height - 1] = 1.0
         heat[x + 1][height - 1] = 1.0
@@ -56,7 +56,7 @@ def update():
         heat[x + 1][height - 2] = 1.0
         heat[x - 1][height - 2] = 1.0
 
-    for y in range(0, height - 2):
+    for y in range(height - 2):
         for x in range(1, width - 1):
             # update this pixel by averaging the below pixels
             average = (
