@@ -38,30 +38,6 @@ hue = 0.0
 
 
 @micropython.native  # noqa: F821
-def from_hsv(h, s, v):
-    i = math.floor(h * 6.0)
-    f = h * 6.0 - i
-    v *= 255.0
-    p = v * (1.0 - s)
-    q = v * (1.0 - f * s)
-    t = v * (1.0 - (1.0 - f) * s)
-
-    i = int(i) % 6
-    if i == 0:
-        return graphics.create_pen(int(v), int(t), int(p))
-    if i == 1:
-        return graphics.create_pen(int(q), int(v), int(p))
-    if i == 2:
-        return graphics.create_pen(int(p), int(v), int(t))
-    if i == 3:
-        return graphics.create_pen(int(p), int(q), int(v))
-    if i == 4:
-        return graphics.create_pen(int(t), int(p), int(v))
-    # if i == 5:
-    return graphics.create_pen(int(v), int(p), int(q))
-
-
-@micropython.native  # noqa: F821
 def update_liquid():
     for y in range(height):
         for x in range(width):
@@ -101,9 +77,9 @@ def draw_portrait():
     global hue
     hue += 0.001
 
-    dark = from_hsv(hue, 1.0, 0.3)
-    mid = from_hsv(hue, 1.0, 0.6)
-    bright = from_hsv(hue, 1.0, 1.0)
+    dark = graphics.create_pen_hsv(hue, 1.0, 0.3)
+    mid = graphics.create_pen_hsv(hue, 1.0, 0.6)
+    bright = graphics.create_pen_hsv(hue, 1.0, 1.0)
 
     for y in range(height):
         for x in range(width):
