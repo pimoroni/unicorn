@@ -3,11 +3,11 @@ import math
 from cosmic import CosmicUnicorn
 from picographics import PicoGraphics, DISPLAY_COSMIC_UNICORN as DISPLAY
 
-'''
+"""
 Displays some text, gradients and colours and demonstrates button use.
 
 You can adjust the brightness with LUX + and -.
-'''
+"""
 
 cu = CosmicUnicorn()
 graphics = PicoGraphics(DISPLAY)
@@ -17,15 +17,15 @@ height = CosmicUnicorn.HEIGHT
 
 
 def gradient(r, g, b):
-    for y in range(0, height):
-        for x in range(0, width):
+    for y in range(height):
+        for x in range(width):
             graphics.set_pen(graphics.create_pen(int((r * x) / 32), int((g * x) / 32), int((b * x) / 32)))
             graphics.pixel(x, y)
 
 
 def grid(r, g, b):
-    for y in range(0, height):
-        for x in range(0, width):
+    for y in range(height):
+        for x in range(width):
             if (x + y) % 2 == 0:
                 graphics.set_pen(graphics.create_pen(r, g, b))
             else:

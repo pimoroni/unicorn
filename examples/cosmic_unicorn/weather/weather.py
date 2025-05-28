@@ -13,7 +13,7 @@ LNG = -1.4239983439328177
 TIMEZONE = "auto"  # determines time zone from lat/long
 
 URL = "http://api.open-meteo.com/v1/forecast?latitude=" + str(LAT) + "&longitude=" + str(LNG) + "&current_weather=true&timezone=" + TIMEZONE
-WEATHER_TEXT = ''
+WEATHER_TEXT = ""
 user_icon = None
 
 
@@ -40,12 +40,12 @@ def get_data():
 
 def calculate_bearing(d):
     # calculates a compass direction from the wind direction in degrees
-    dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+    dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
     ix = round(d / (360. / len(dirs)))
     return dirs[ix % len(dirs)]
 
 
-def status_handler(mode, status, ip):
+def status_handler(_mode, _status, _ip):
     global MESSAGE
     print("Network: {}".format(WIFI_CONFIG.SSID))
 

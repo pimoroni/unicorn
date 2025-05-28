@@ -2,12 +2,12 @@ import time
 from stellar import StellarUnicorn
 from picographics import PicoGraphics, DISPLAY_STELLAR_UNICORN as DISPLAY
 
-'''
+"""
 A collection of copies of classic terminal styles including
 C64, MS-DOS, Spectrum, and more. Images and text are drawn
 pixel by pixel from a pattern of Os and Xs.
 You can adjust the brightness with LUX + and -.
-'''
+"""
 
 su = StellarUnicorn()
 graphics = PicoGraphics(DISPLAY)
@@ -113,11 +113,11 @@ def draw(image, fg, bg, time_ms):
         for x in range(len(row)):
             pixel = row[x]
             # draw the prompt text
-            if pixel == 'O':
+            if pixel == "O":
                 graphics.set_pen(fg_pen)
 
             # draw the caret blinking
-            elif pixel == 'X' and (time_ms // 300) % 2:
+            elif pixel == "X" and (time_ms // 300) % 2:
                 graphics.set_pen(fg_pen)
 
             else:

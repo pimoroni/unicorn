@@ -29,11 +29,11 @@ def init():
 def pen_from_value(value):
     if value < 0.15:
         return palette[0]
-    elif value < 0.25:
+    if value < 0.25:
         return palette[1]
-    elif value < 0.35:
+    if value < 0.35:
         return palette[2]
-    elif value < 0.45:
+    if value < 0.45:
         return palette[3]
     return palette[4]
 
@@ -46,7 +46,7 @@ def draw():
         heat[x][height - 2] = 0.0
 
     # add new fire spawns
-    for c in range(fire_spawns):
+    for _ in range(fire_spawns):
         x = random.randint(0, width - 4) + 2
         heat[x + 0][height - 1] = 1.0
         heat[x + 1][height - 1] = 1.0
@@ -56,7 +56,7 @@ def draw():
         heat[x - 1][height - 2] = 1.0
 
     # average and damp out each value to create rising flame effect
-    for y in range(0, height - 2):
+    for y in range(height - 2):
         for x in range(1, width - 1):
             # update this pixel by averaging the below pixels
             average = (

@@ -3,12 +3,12 @@ import random
 from cosmic import CosmicUnicorn
 from picographics import PicoGraphics, DISPLAY_COSMIC_UNICORN as DISPLAY
 
-'''
+"""
 Random LEDs blink on and off mimicing the look of a movie
 super computer doing its work in the eighties.
 
 You can adjust the brightness with LUX + and -.
-'''
+"""
 
 cu = CosmicUnicorn()
 graphics = PicoGraphics(DISPLAY)

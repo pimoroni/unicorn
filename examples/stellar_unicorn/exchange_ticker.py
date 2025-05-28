@@ -13,7 +13,7 @@ from stellar import StellarUnicorn
 from picographics import PicoGraphics, DISPLAY_STELLAR_UNICORN as DISPLAY
 import gc
 
-URL = 'https://api.coinbase.com/v2/exchange-rates?currency={0}'
+URL = "https://api.coinbase.com/v2/exchange-rates?currency={0}"
 
 currencies = {"Bitcoin": "BTC", "Ethereun": "ETH", "Pound": "GBP", "Dollar": "USD", "Dogecoin": "DOGE"}
 currency_keys = list(currencies.keys())
@@ -41,23 +41,22 @@ graphics = PicoGraphics(DISPLAY)
 def status_handler(mode, status, ip):
     # reports wifi connection status
     print(mode, status, ip)
-    print('Connecting to wifi...')
+    print("Connecting to wifi...")
     if status is not None:
         if status:
-            print('Wifi connection successful!')
+            print("Wifi connection successful!")
         else:
-            print('Wifi connection failed!')
+            print("Wifi connection failed!")
 
 
 try:
     network_manager = NetworkManager(WIFI_CONFIG.COUNTRY, status_handler=status_handler)
     uasyncio.get_event_loop().run_until_complete(network_manager.client(WIFI_CONFIG.SSID, WIFI_CONFIG.PSK))
-except Exception as e:
-    print(f'Wifi connection failed! {e}')
+except Exception as e:  # noqa: BLE001
+    print(f"Wifi connection failed! {e}")
 
 
 def get_data(currency_selected):
-
     graphics.set_pen(graphics.create_pen(20, 20, 20))
     graphics.clear()
     graphics.set_pen(graphics.create_pen(100, 100, 100))
@@ -66,25 +65,23 @@ def get_data(currency_selected):
     su.update(graphics)
     gc.collect()
     # open the json file
-    print('Requesting URL:')
+    print("Requesting URL:")
     print(URL.format(currencies[currency_selected]))
     r = urequests.get(URL.format(currencies[currency_selected]))
     gc.collect()
     # open the json data
     data_obj = r.json()
-    print('Data obtained!')
+    print("Data obtained!")
     r.close()
     return data_obj
 
 
 def calculate_xpos(length, cycle):
     cycle_phase = math.cos(math.pi * cycle / (cycles_per_sequence / 2))
-    pos_x = int((-(length / 2) * 10) - (length / 2) * 10 * cycle_phase)
-    return pos_x
+    return int((-(length / 2) * 10) - (length / 2) * 10 * cycle_phase)
 
 
 def update_display(cycle):
-
     graphics.set_pen(graphics.create_pen(20, 20, 20))
     graphics.clear()
     graphics.set_pen(graphics.create_pen(100, 0, 0))
@@ -99,7 +96,7 @@ def update_base_currency(index):
     fetched_data = 0
     global rates, rate_keys, currency_symbol, currency_rate, ref_currency_name
     fetched_data = get_data(currency_keys[index])
-    rates = fetched_data['data']['rates']
+    rates = fetched_data["data"]["rates"]
     rate_keys = list(rates.keys())
     currency_symbol = rate_keys[index]
     currency_rate = str(rates[rate_keys[index]])

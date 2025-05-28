@@ -4,11 +4,11 @@ import math
 from cosmic import CosmicUnicorn
 from picographics import PicoGraphics, DISPLAY_COSMIC_UNICORN as DISPLAY
 
-'''
+"""
 A 70s-tastic, procedural rainbow lava lamp.
 
 You can adjust the brightness with LUX + and -.
-'''
+"""
 
 cu = CosmicUnicorn()
 graphics = PicoGraphics(DISPLAY)
@@ -57,8 +57,8 @@ def from_hsv(h, s, v):
         return graphics.create_pen(int(p), int(q), int(v))
     if i == 4:
         return graphics.create_pen(int(t), int(p), int(v))
-    if i == 5:
-        return graphics.create_pen(int(v), int(p), int(q))
+    # if i == 5:
+    return graphics.create_pen(int(v), int(p), int(q))
 
 
 @micropython.native  # noqa: F821

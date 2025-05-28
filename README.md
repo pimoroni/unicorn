@@ -21,3 +21,9 @@ You can find the latest release at [https://github.com/pimoroni/unicorn/releases
 * [Stellar 16x16 (Pico W)](https://shop.pimoroni.com/products/space-unicorns?variant=40842632953939)
 * [Galactic 53x11 (Pico W)](https://shop.pimoroni.com/products/space-unicorns?variant=40842033561683)
 * [Cosmic 32x32 (Pico W)](https://shop.pimoroni.com/products/space-unicorns?variant=40842626596947)
+
+## Other Resources
+
+* [(C++) Galactic Unicorn Scrolling Quote Demo](https://github.com/ahnlak-rp2040/gu-scrolling-quote)
+* [(C++) Multiple Unicorns as a single display](https://github.com/gadgetoid/gu-multiverse)
+* [(C++) Galactic Unicorn Bluetooth Audio Visualizer](https://github.com/Gadgetoid/galactic-bluetooth-audio)

@@ -56,7 +56,7 @@ def update():
     heat[height - 2][:] = 0.0
 
     # Add random fire spawns
-    for c in range(FIRE_SPAWNS):
+    for _ in range(FIRE_SPAWNS):
         x = random.randint(0, width - 4) + 2
         heat[height - 1][x - 1:x + 1] = HEAT / 2.0
         heat[height - 2][x - 1:x + 1] = HEAT
