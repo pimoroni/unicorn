@@ -185,7 +185,7 @@ class WavPlayer:
         if self.__audio_out is not None:
             self.__audio_out.deinit()   # Deinit any active I2S comms
 
-        self.__state == WavPlayer.NONE  # Return to the none state
+        self.__state = WavPlayer.NONE  # Return to the none state
 
     def __i2s_callback(self, arg):
         # PLAY
@@ -198,6 +198,7 @@ class WavPlayer:
                     # Do we want to loop the WAV playback?
                     if self.__loop_wav:
                         _ = self.__wav_file.seek(self.__first_sample_offset)    # Play again, so advance to first byte of sample data
+                        self.total_bytes_read = 0                               # Reset for looping
                     else:
                         self.__wav_file.close()                                 # Stop playing, so close the file
                         self.__state = WavPlayer.FLUSH                          # and enter the flush state on the next callback
