@@ -186,3 +186,4 @@ Here are some cool Cosmic Unicorn community projects and resources that you migh
 - :link: [cosmic-emoji-react - paint emojis from a computer, phone or tablet](https://github.com/chriscareycode/cosmic-unicorn/tree/main/cosmic-emoji-react)
 - :link: [cosmic-paste - paste images from the clipboard to Cosmic Unicorn](https://github.com/chriscareycode/cosmic-unicorn/tree/main/cosmic-paste)
 - :link: [Halloweenicorn - PIR enabled scarer](https://github.com/mrglennjones/Halloweenicorn)
+- :link: [Cosmic Launcher - games and animations](https://github.com/mrkwllmsn/cosmic_laucher)
