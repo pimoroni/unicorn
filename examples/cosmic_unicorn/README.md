@@ -23,18 +23,12 @@
 - [NumPy examples](#numpy-examples)
 - [Other Examples](#other-examples)
   - [Launch (Demo Reel)](#launch-demo-reel)
-- [Other Resources](#other-resources)
 
 ## About Cosmic Unicorn
 
 Cosmic Unicorn offers 32x32 bright RGB LEDs driven by Pico W's PIO in addition to a 1W amplifier + speaker, a collection of system and user buttons, and two Qw/ST connectors for adding external sensors and devices. Woha!
 
-- :link: [Cosmic Unicorn store page](https://shop.pimoroni.com/products/cosmic-unicorn)
-
-Cosmic Unicorn ships with MicroPython firmware pre-loaded, but you can download the most recent version at the link below (you'll want the  `cosmic-unicorn` image).
-
-- [MicroPython releases](https://github.com/pimoroni/pimoroni-pico/releases)
-- [Installing MicroPython](../../../setting-up-micropython.md)
+- :link: [Cosmic Unicorn store page](https://shop.pimoroni.com/products/space-unicorns?variant=40842626596947)
 
 ## Cosmic Unicorn and PicoGraphics
 
@@ -176,14 +170,4 @@ The examples in the folder use `numpy`-like array functions contained in the `ul
 
 [launch](launch)
 
-If you want to get the demo reel that Cosmic Unicorn ships with back, copy the contents of this `launch` folder to your Pico W.
-
-## Other Resources
-
-Here are some cool Cosmic Unicorn community projects and resources that you might find useful / inspirational! Note that code at the links below has not been tested by us and we're not able to offer support with it.
-
-- :link: [Green Energy Display with Cosmic Unicorn](https://www.hackster.io/andreas-motzek/clock-and-green-energy-display-with-cosmic-unicorn-641dcb)
-- :link: [cosmic-emoji-react - paint emojis from a computer, phone or tablet](https://github.com/chriscareycode/cosmic-unicorn/tree/main/cosmic-emoji-react)
-- :link: [cosmic-paste - paste images from the clipboard to Cosmic Unicorn](https://github.com/chriscareycode/cosmic-unicorn/tree/main/cosmic-paste)
-- :link: [Halloweenicorn - PIR enabled scarer](https://github.com/mrglennjones/Halloweenicorn)
-- :link: [Cosmic Launcher - games and animations](https://github.com/mrkwllmsn/cosmic_laucher)
+If you want to get the demo reel that Cosmic Unicorn ships with back, copy the contents of this `launch` folder to your Pico.

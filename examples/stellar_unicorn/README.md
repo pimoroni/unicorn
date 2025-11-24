@@ -35,11 +35,6 @@ Stellar Unicorn offers 16x16 bright RGB LEDs driven by Pico W's PIO in addition 
 
 - :link: [Stellar Unicorn store page](https://shop.pimoroni.com/products/stellar-unicorn)
 
-Stellar Unicorn ships with MicroPython firmware pre-loaded, but you can download the most recent version at the link below (you'll want the  `stellar-unicorn` image).
-
-- [MicroPython releases](https://github.com/pimoroni/pimoroni-pico/releases)
-- [Installing MicroPython](../../../setting-up-micropython.md)
-
 ## Stellar Unicorn and PicoGraphics
 
 The easiest way to start displaying cool stuff on Stellar Unicorn is using our Stellar Unicorn module (which contains a bunch of helpful functions for interacting with the buttons, adjusting brightness and suchlike) and our PicoGraphics library, which is chock full of useful functions for drawing on the LED matrix.
