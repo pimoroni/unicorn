@@ -20,18 +20,12 @@
   - [Galactic Paint](#galactic-paint)
 - [Other Examples](#other-examples)
   - [Launch (Demo Reel)](#launch-demo-reel)
-- [Other Resources](#other-resources)
 
 ## About Galactic Unicorn
 
 Galactic Unicorn offers 53x11 bright RGB LEDs driven by Pico W's PIO in addition to a 1W amplifier + speaker, a collection of system and user buttons, and two Qw/ST connectors for adding external sensors and devices. Woha!
 
 - :link: [Galactic Unicorn store page](https://shop.pimoroni.com/products/galactic-unicorn)
-
-Galactic Unicorn ships with MicroPython firmware pre-loaded, but you can download the most recent version at the link below (you'll want the  `galactic-unicorn` image).
-
-- [MicroPython releases](https://github.com/pimoroni/pimoroni-pico/releases)
-- [Installing MicroPython](../../../setting-up-micropython.md)
 
 ## Galactic Unicorn and PicoGraphics
 
@@ -149,19 +143,3 @@ Requires `WIFI_CONFIG.py` from the `common` directory. It also needs the `microp
 [launch](launch)
 
 If you want to get the demo reel that Galactic Unicorn ships with back, copy the contents of this `launch` folder to your Pico W.
-
-## Other Resources
-
-Here are some cool Galactic Unicorn community projects and resources that you might find useful / inspirational! Note that code at the links below has not been tested by us and we're not able to offer support with it.
-
-- :link: [Galactic Unicorn MQTT scroller (and 3D printed case)](https://github.com/ucl-casa-ce/Galactic-Unicorn-MQTT-Scroller)
-- :link: [Compiling custom pimoroni-pico MicroPython (with ulab)](https://medium.com/@iestynlloyd/galactic-unicorns-and-custom-pimoroni-pico-firmware-38dd7c5913b8)
-- :link: [Galactic Unicorn Graphical Workout](https://www.instructables.com/Galactic-Unicorn-Graphical-Workout/)
-- :link: [Galactic Unicorn Bounce - Simple GFX Demo](https://www.instructables.com/Galactic-Unicorn-Bounce-Simple-GFX-Demo/)
-- :link: [Cheerlights + Galactic Unicorn + MicroPython (beginner-friendly tutorial)](https://cheerlights.com/cheerlights-raspberry-pi-pico-w-micropython/)
-- :link: [CheerClock (plus laser-cut templates for a fancy case/diffuser)](https://github.com/seanosteen/CheerClock)
-- :link: [Giant Pomodoro timer using Galactic Unicorn](https://www.raspberrypi.com/news/make-a-giant-pomodoro-timer-using-galactic-unicorn/)
-- :link: [Galactic Weather Clock](https://github.com/raphv/galactic-weather-clock)
-- :link: [Unicorn Clock](https://github.com/hugokernel/UnicornClock)
-- :link: [Unicorn Weather Station](https://github.com/TagWolf/UnicornWeatherStation)
-- :link: [Unicorn News/RSS Feed Display](https://github.com/TagWolf/UnicornRSSDisplay)
