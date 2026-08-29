@@ -56,7 +56,6 @@ Here are some cool community projects and resources that you might find useful /
 - :link: [Galactic Unicorn Graphical Workout](https://www.instructables.com/Galactic-Unicorn-Graphical-Workout/)
 - :link: [Galactic Unicorn Bounce - Simple GFX Demo](https://www.instructables.com/Galactic-Unicorn-Bounce-Simple-GFX-Demo/)
 - :link: [Cheerlights + Galactic Unicorn + MicroPython (beginner-friendly tutorial)](https://cheerlights.com/cheerlights-raspberry-pi-pico-w-micropython/)
-- :link: [CheerClock (plus laser-cut templates for a fancy case/diffuser)](https://github.com/seanosteen/CheerClock)
 - :link: [Giant Pomodoro timer using Galactic Unicorn](https://www.raspberrypi.com/news/make-a-giant-pomodoro-timer-using-galactic-unicorn/)
 - :link: [Galactic Weather Clock](https://github.com/raphv/galactic-weather-clock)
 - :link: [Unicorn Clock](https://github.com/hugokernel/UnicornClock)
